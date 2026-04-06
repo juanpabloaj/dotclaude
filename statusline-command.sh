@@ -57,7 +57,20 @@ fi
 week_used=$(echo "$input" | jq -r '.rate_limits.seven_day.used_percentage // empty')
 if [ -n "$week_used" ]; then
   week_int=$(printf "%.0f" "$week_used")
-  metrics="$metrics $(color_pct "$week_int" 40 70 "$(printf 'W:%s%%' "$week_int")")"
+  week_label=$(printf "W:%s%%" "$week_int")
+  week_resets_at=$(echo "$input" | jq -r '.rate_limits.seven_day.resets_at // empty')
+  if [ -n "$week_resets_at" ]; then
+    now=$(date +%s)
+    diff_min=$(( (week_resets_at - now) / 60 ))
+    diff_days=$(( diff_min / 1440 ))
+    diff_hours=$(( (diff_min % 1440) / 60 ))
+    if [ "$diff_days" -gt 0 ]; then
+      week_label="$week_label ${diff_days}d${diff_hours}h"
+    else
+      week_label="$week_label ${diff_hours}h"
+    fi
+  fi
+  metrics="$metrics $(color_pct "$week_int" 40 70 "$week_label")"
 fi
 
 # Output style / mode (e.g. plan mode)
