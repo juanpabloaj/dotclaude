@@ -73,6 +73,17 @@ if [ -n "$week_used" ]; then
   metrics="$metrics $(color_pct "$week_int" 40 70 "$week_label")"
 fi
 
+# Drift score via convdrift (only if the project exists and transcript is available)
+# Passes the same Claude Code JSON to statusline-run, which analyzes the transcript
+# and returns a compact drift indicator (e.g. D:42)
+# https://github.com/juanpabloaj/convdrift
+drift=""
+convdrift_dir="$HOME/src/convdrift"
+transcript_path=$(echo "$input" | jq -r '.transcript_path // .transcriptPath // empty')
+if [ -f "$convdrift_dir/pyproject.toml" ] && [ -n "$transcript_path" ] && [ -f "$transcript_path" ]; then
+  drift=$(echo "$input" | uv run --project "$convdrift_dir" convdrift statusline-run 2>/dev/null)
+fi
+
 # Output style / mode (e.g. plan mode)
 style=$(echo "$input" | jq -r '.output_style.name // empty')
 if [ -n "$style" ] && [ "$style" != "null" ] && [ "$style" != "default" ]; then
@@ -85,6 +96,10 @@ branch=$(git -C "$dir" --no-optional-locks rev-parse --abbrev-ref HEAD 2>/dev/nu
 if [ -n "$branch" ]; then
   dirty=$(git -C "$dir" --no-optional-locks status --porcelain 2>/dev/null)
   [ -n "$dirty" ] && branch="${branch}*"
+fi
+
+if [ -n "$drift" ]; then
+  metrics="$metrics | $drift"
 fi
 
 if [ -n "$branch" ]; then
