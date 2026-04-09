@@ -49,7 +49,6 @@ Before launching complex sessions, write a state file to disk:
 Poll with `capture-pane -p -J` and check for absence of `Working` in the output, or presence of the input prompt `›`.
 
 ## Agent notes
-- Gemini CLI (free plan, gemini-3-flash-preview): can take 4+ minutes on research tasks — unreliable, consider timeout or skip
 - Codex: faster and more reliable for active web searches and filesystem exploration
 - For non-interactive Gemini use `--prompt` or `-p` flag
 
