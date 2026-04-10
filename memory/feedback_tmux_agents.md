@@ -15,9 +15,10 @@ mkdir -p "${TMPDIR:-/tmp}/claude-tmux-sockets"
 tmux -S "$SOCKET" new -d -s "descriptive-name"
 ```
 
-**Literal send** — safer for complex prompts with special characters. Always send Enter as a separate command — `-l` pastes text but does not submit it:
+**Literal send** — safer for complex prompts with special characters. Always send Enter as a separate command — `-l` pastes text but does not submit it. Add `sleep 1` between the message and the Enter to ensure the terminal has processed the text before submitting:
 ```bash
 tmux -S "$SOCKET" send-keys -t target -l -- "$cmd"
+sleep 1
 tmux -S "$SOCKET" send-keys -t target Enter
 ```
 
