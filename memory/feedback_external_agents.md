@@ -8,6 +8,7 @@ When the user asks to invoke Codex or Gemini, always resume the previous session
 
 - **Codex**: `codex exec resume --last "prompt"`
 - **Gemini**: `gemini -r latest -p "prompt"`
+- **Antigravity**: `agy -c -p "prompt"`
 
 Never start a new session when a prior one exists.
 

@@ -51,7 +51,8 @@ Poll with `capture-pane -p -J` and check for absence of `Working` in the output,
 
 ## Agent notes
 - Codex: faster and more reliable for active web searches and filesystem exploration
-- For non-interactive Gemini use `--prompt` or `-p` flag
+- For non-interactive Gemini use --prompt or -p flag
+- For non-interactive Antigravity use agy --prompt or -p flag
 
 **Why:** without a private socket, agent sessions mix with the user's tmux. Without a state file, context is lost after compression.
 **How to apply:** whenever launching 2+ agents in parallel, use private socket + state file.
